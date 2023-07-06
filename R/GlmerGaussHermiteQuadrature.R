@@ -12,10 +12,10 @@
 #'
 #' @export
 glmmPA <- function(merObject, alpha = 0.05) {
-  if (!is(merObject, "glmerMod")) {
+  if (!methods::is(merObject, "glmerMod")) {
     stop("The merObject parameter must be a glmerMod instance!")
   }
-  omega <- vcov(merObject) # extracting the estimated variance-covariance of beta hat
+  omega <- stats::vcov(merObject) # extracting the estimated variance-covariance of beta hat
   X <- merObject@pp$X # extracting the design matrix of the fixed effects
   beta.hat <- merObject@beta
   randomStd <- merObject@theta
@@ -26,8 +26,8 @@ glmmPA <- function(merObject, alpha = 0.05) {
     stdErrXBeta[i,1] <- as.numeric(t(X[i,]) %*% omega %*% X[i,])
   }
 
-  lowerXBeta <- xBeta - qnorm(1 - alpha * .5) * stdErrXBeta
-  upperXBeta <- xBeta + qnorm(1 - alpha * .5) * stdErrXBeta
+  lowerXBeta <- xBeta - stats::qnorm(1 - alpha * .5) * stdErrXBeta
+  upperXBeta <- xBeta + stats::qnorm(1 - alpha * .5) * stdErrXBeta
 
   w <- c(0.199532420590459E-1, 0.393619323152241, 0.945308720482942, 0.393619323152241, 0.199532420590459E-1)
   v <- c(-0.202018287045609E1, -0.958572464613819, 0, 0.958572464613819, 0.202018287045609E1)
