@@ -1,4 +1,3 @@
-
 #'
 #' Approximate the population-average predictions from a
 #' mixed-effects logistic regression  using Gauss-Hermite quadrature.
@@ -15,7 +14,7 @@ glmmPA <- function(merObject, alpha = 0.05) {
   if (!methods::is(merObject, "glmerMod")) {
     stop("The merObject parameter must be a glmerMod instance!")
   }
-  omega <- stats::vcov(merObject) # extracting the estimated variance-covariance of beta hat
+  omega <- lme4::vcov.merMod(merObject) # extracting the estimated variance-covariance of beta hat
   X <- merObject@pp$X # extracting the design matrix of the fixed effects
   beta.hat <- merObject@beta
   randomStd <- merObject@theta
@@ -47,3 +46,18 @@ glmmPA <- function(merObject, alpha = 0.05) {
 
   return(data.frame(xBeta, fixedOnly = linkFunction(xBeta), meanPA, lowerMeanPA, upperMeanPA, alpha))
 }
+
+
+#'
+#' An example of logistic regression with mixed effects.
+#'
+#'
+#' @docType data
+#'
+#' @usage data(fitGLMER)
+#'
+#' @keywords datasets
+#'
+#' @examples
+#' data(fitGLMER)
+"fitGLMER"
