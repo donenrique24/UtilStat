@@ -4,6 +4,20 @@
 # Date: January 2019
 ########################################################
 
+
+context("Testing variable description")
+
+example <- UtilStat::exampleRecruitment
+
+a <- summarizeThisVariable(example, "G_TOT")
+test_that("Testing results of variable description", {
+  expect_equal(a$n.G_TOT, 26248, tolerance = 1E-5)
+  expect_equal(a$mean.G_TOT, 16.87469, tolerance = 1E-5)
+  expect_equal(a$min.G_TOT, 0, tolerance = 1E-5)
+  expect_equal(a$max.G_TOT, 64.13471, tolerance = 1E-5)
+})
+
+
 context("Testing Hosmer-Lemeshow Implementation")
 
 example <- UtilStat::exampleRecruitment
