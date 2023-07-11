@@ -4,15 +4,28 @@
 \alias{summarizeThisVariable}
 \title{Provide a summary of a particular field}
 \usage{
-summarizeThisVariable(dataset, variable, onlyWherePresent = F)
+summarizeThisVariable(
+  dataset,
+  variable,
+  speciesField,
+  onlyWherePresent = F,
+  format = F,
+  nbDigits = 0
+)
 }
 \arguments{
 \item{dataset}{a data.frame object}
 
 \item{variable}{the field name (charactar)}
 
-\item{onlyWherePresent}{a logical, if true the summary is calculated only for the
+\item{speciesField}{the field name that contains the different species
 observations where the value is greater than 0 (by default is set to false)}
+
+\item{onlyWherePresent}{a logical, if true the summary is calculated only for the}
+
+\item{format}{a logical to format the output. The formatting goes as follows: mean (min,max)}
+
+\item{nbDigits}{an integer for the number of digits (useless if format = F)}
 }
 \description{
 Provide a summary of a particular field
