@@ -12,7 +12,8 @@ binomialResidualsClass(
   min = -5,
   max = +5,
   cutoff = 5,
-  title = NULL
+  title = NULL,
+  print = T
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ binomialResidualsClass(
 \item{cutoff}{the minimum number of observations to consider the residual}
 
 \item{title}{an optional character to be the title of the graph}
+
+\item{print}{a logical (true prints the dataset before plotting it)}
 }
 \value{
 a ggplot2 graph

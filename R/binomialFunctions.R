@@ -13,7 +13,7 @@
 "exampleRecruitment"
 
 
-.binomialResidualsCore <- function(dataSet, fieldName, min, max, cutoff, continuous, title) {
+.binomialResidualsCore <- function(dataSet, fieldName, min, max, cutoff, continuous, title, print=T) {
   meanPred <- stats::aggregate(pred ~ roundVar, dataSet, FUN="mean")
   meanObs <- stats::aggregate(obs ~ roundVar, dataSet, FUN="mean")
   n <- stats::aggregate(obs ~ roundVar, dataSet, FUN="length")
@@ -25,7 +25,9 @@
   tmp$lower95 <- stats::qt(0.025, df=tmp$n - 1)
   tmp$upper95 <- stats::qt(0.975, df=tmp$n - 1)
   tmp$diff <- (tmp$obs - tmp$pred) / tmp$std
-  print(tmp)
+  if (print) {
+    print(tmp)
+  }
   plot <- ggplot2::ggplot() + ggplot2::geom_point(ggplot2::aes(x=roundVar, y = diff), tmp)
   if (continuous) {
     plot <- plot +
@@ -62,16 +64,17 @@
 #' @param max the upper bound of the y-axis
 #' @param cutoff the minimum number of observations to consider the residual
 #' @param title an optional character to be the title of the graph
+#' @param print a logical (true prints the dataset before plotting it)
 #' @return a ggplot2 graph
 #'
 #' @export
-binomialResidualsContinuous <- function(dataSet, fitted, fieldName, classRange, obsFieldName, min = -5, max = +5, cutoff = 5, title = NULL) {
+binomialResidualsContinuous <- function(dataSet, fitted, fieldName, classRange, obsFieldName, min = -5, max = +5, cutoff = 5, title = NULL, print = T) {
   .dataSet <- as.data.frame(dataSet)
   .dataSet$pred <- fitted
   .dataSet$obs <- .dataSet[,obsFieldName]
   .dataSet$roundVar <- round(.dataSet[,fieldName] / classRange) * classRange
   .dataSetTrim <- as.data.frame(.dataSet[,c("pred", "obs", "roundVar")])
-  plot <- .binomialResidualsCore(.dataSetTrim, fieldName, min, max, cutoff, continuous = T, title)
+  plot <- .binomialResidualsCore(.dataSetTrim, fieldName, min, max, cutoff, continuous = T, title, print)
   return(plot)
 }
 
@@ -89,17 +92,18 @@ binomialResidualsContinuous <- function(dataSet, fitted, fieldName, classRange, 
 #' @param max the upper bound of the y-axis
 #' @param cutoff the minimum number of observations to consider the residual
 #' @param title an optional character to be the title of the graph
+#' @param print a logical (true prints the dataset before plotting it)
 #' @return a ggplot2 graph
 #'
 #' @export
-binomialResidualsClass <- function(dataSet, fitted, fieldName, obsFieldName, min = -5, max = +5, cutoff = 5, title = NULL) {
+binomialResidualsClass <- function(dataSet, fitted, fieldName, obsFieldName, min = -5, max = +5, cutoff = 5, title = NULL, print = T) {
   .dataSet <- as.data.frame(dataSet)
   .dataSet$pred <- as.numeric(fitted)
   .dataSet$obs <- .dataSet[,obsFieldName]
   .dataSet$roundVar <- .dataSet[,fieldName]
   .dataSetTrim <- as.data.frame(.dataSet[,c("pred", "obs", "roundVar")])
 #  d <- .dataSetTrim
-  plot <- .binomialResidualsCore(.dataSetTrim, fieldName, min, max, cutoff, continuous = F, title)
+  plot <- .binomialResidualsCore(.dataSetTrim, fieldName, min, max, cutoff, continuous = F, title, print)
   return(plot)
 }
 
