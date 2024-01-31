@@ -1,7 +1,7 @@
 Package: UtilStat
 Type: Package
 Title: Tools for statistical analysis
-Version: 1.1.0
+Version: 1.1.1
 Author: Mathieu Fortin
 Maintainer: Mathieu Fortin <mathieu.fortin.re@gmail.com>
 Description: Tools for statistical analysis.

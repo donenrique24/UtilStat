@@ -1,17 +1,13 @@
 #'
-#' Implementation of the Gauss-Hermite quadrature
-#' @author Mathieu Fortin - January 2024
-#'
-
-
-#'
 #' Compute Gauss-Hermite quadrature.
 #'
 #' The function relies on a five-point quadrature. It assumes the variable that follows the quadrature is
 #' normally distribution with mean 0 and variance s2.
-#' @param f a function whose first argument is a point of the quadrature
-#' @param s2 the variance of the variable
+#'
+#' @param f a function whose first argument is the normal deviate
+#' @param s2 the variance of the normal deviate
 #' @param ... other arguments to be passed to the function
+#' @author Mathieu Fortin - January 2024
 #'
 #' @export
 getHermiteQuadratureApproximation <- function(f, s2, ...) {
