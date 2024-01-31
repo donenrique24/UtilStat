@@ -20,8 +20,6 @@ test_that("Testing results of variable description", {
   expect_equal(b$formatted.G_TOT, "16.9 (0.0,64.1)")
 })
 
-
-
 context("Testing Hosmer-Lemeshow Implementation")
 
 example <- UtilStat::exampleRecruitment
@@ -35,11 +33,48 @@ test_that("Testing results of Hosmer-Lemeshow test", {
 
 context("Testing Gauss-Hermite quadrature")
 
-exampleFitGLMER <- UtilStat::fitGLMER
+# exampleFitGLMER <- UtilStat::fitGLMER
+#
+# margProb <- glmmPA(exampleFitGLMER)
+# test_that("Testing marginal probabilities from Gauss-Hermite", {
+#   expect_equal(margProb[1,"meanPA"], 0.24252764771389884, tolerance = 1E-8)
+# })
 
-margProb <- glmmPA(exampleFitGLMER)
-test_that("Testing marginal probabilities from Gauss-Hermite", {
-  expect_equal(margProb[1,"meanPA"], 0.24252764771389884, tolerance = 1E-8)
+
+meanPA <- getHermiteQuadratureApproximation(function(u) {return(exp(u))}, 1)
+expected <- exp(0.5)
+test_that("Testing Gauss-Hermite approximation with exp(u)", {
+  expect_equal(expected, meanPA, tolerance = 1E-4)
+})
+
+meanPA <- getHermiteQuadratureApproximation(function(u) {return(exp(u))}, 2)
+expected <- exp(1)
+test_that("Testing Gauss-Hermite approximation with exp(u)", {
+  expect_equal(expected, meanPA, tolerance = 2E-3)
+})
+
+meanPA <- getHermiteQuadratureApproximation(function(u) {return(u^2)}, 1)
+expected <- 1
+test_that("Testing Gauss-Hermite approximation with u^2", {
+  expect_equal(expected, meanPA, tolerance = 1E-6)
+})
+
+meanPA <- getHermiteQuadratureApproximation(function(u) {return(u^2)}, 2)
+expected <- 2
+test_that("Testing Gauss-Hermite approximation with u^2", {
+  expect_equal(expected, meanPA, tolerance = 1E-6)
+})
+
+meanPA <- getHermiteQuadratureApproximation(function(u, a) {return(exp(a + u))}, 1, 2)
+expected <- exp(2 + 0.5)
+test_that("Testing Gauss-Hermite approximation with exp(a + u)", {
+  expect_equal(expected, meanPA, tolerance = 1E-3)
+})
+
+meanPA <- getHermiteQuadratureApproximation(function(u, a) {return((a + u)^2)}, 1, 2)
+expected <- 2^2 + 1
+test_that("Testing Gauss-Hermite approximation with (a + u)^2", {
+  expect_equal(expected, meanPA, tolerance = 1E-6)
 })
 
 

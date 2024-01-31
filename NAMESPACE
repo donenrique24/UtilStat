@@ -2,7 +2,7 @@
 
 export(binomialResidualsClass)
 export(binomialResidualsContinuous)
-export(glmmPA)
+export(getHermiteQuadratureApproximation)
 export(hosmerLemeshowTest)
 export(summarizeThisVariable)
 export(symSquare)
