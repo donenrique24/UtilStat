@@ -10,7 +10,7 @@
 #' @author Mathieu Fortin - January 2024
 #'
 #' @export
-getHermiteQuadratureApproximation <- function(f, s2, ...) {
+getGaussHermiteQuadApproximation <- function(f, s2, ...) {
   if (!methods::is(f, "function")) {
     stop("The f argument must be a function whose argument is the quadrature point!")
   }

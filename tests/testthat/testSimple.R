@@ -41,37 +41,37 @@ context("Testing Gauss-Hermite quadrature")
 # })
 
 
-meanPA <- getHermiteQuadratureApproximation(function(u) {return(exp(u))}, 1)
+meanPA <- getGaussHermiteQuadApproximation(function(u) {return(exp(u))}, 1)
 expected <- exp(0.5)
 test_that("Testing Gauss-Hermite approximation with exp(u)", {
   expect_equal(expected, meanPA, tolerance = 1E-4)
 })
 
-meanPA <- getHermiteQuadratureApproximation(function(u) {return(exp(u))}, 2)
+meanPA <- getGaussHermiteQuadApproximation(function(u) {return(exp(u))}, 2)
 expected <- exp(1)
 test_that("Testing Gauss-Hermite approximation with exp(u)", {
   expect_equal(expected, meanPA, tolerance = 2E-3)
 })
 
-meanPA <- getHermiteQuadratureApproximation(function(u) {return(u^2)}, 1)
+meanPA <- getGaussHermiteQuadApproximation(function(u) {return(u^2)}, 1)
 expected <- 1
 test_that("Testing Gauss-Hermite approximation with u^2", {
   expect_equal(expected, meanPA, tolerance = 1E-6)
 })
 
-meanPA <- getHermiteQuadratureApproximation(function(u) {return(u^2)}, 2)
+meanPA <- getGaussHermiteQuadApproximation(function(u) {return(u^2)}, 2)
 expected <- 2
 test_that("Testing Gauss-Hermite approximation with u^2", {
   expect_equal(expected, meanPA, tolerance = 1E-6)
 })
 
-meanPA <- getHermiteQuadratureApproximation(function(u, a) {return(exp(a + u))}, 1, 2)
+meanPA <- getGaussHermiteQuadApproximation(function(u, a) {return(exp(a + u))}, 1, 2)
 expected <- exp(2 + 0.5)
 test_that("Testing Gauss-Hermite approximation with exp(a + u)", {
   expect_equal(expected, meanPA, tolerance = 1E-3)
 })
 
-meanPA <- getHermiteQuadratureApproximation(function(u, a) {return((a + u)^2)}, 1, 2)
+meanPA <- getGaussHermiteQuadApproximation(function(u, a) {return((a + u)^2)}, 1, 2)
 expected <- 2^2 + 1
 test_that("Testing Gauss-Hermite approximation with (a + u)^2", {
   expect_equal(expected, meanPA, tolerance = 1E-6)
