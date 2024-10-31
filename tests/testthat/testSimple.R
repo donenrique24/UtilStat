@@ -24,6 +24,8 @@ context("Testing predicted probabilities against observed proportions")
 
 example <- UtilStat::exampleRecruitment
 
+UtilStat::binomialResidualsContinuous(example, example$pred, "G_TOT", 2, "occurred", print=F, textsize = 20, xLabel = "Basal area")
+
 predProb <- UtilStat::getPredictedProbsAndObservedProps(example, example$pred, "G_TOT", 2, "occurred")
 
 test_that("Testing results of Hosmer-Lemeshow test", {

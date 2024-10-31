@@ -14,7 +14,9 @@ binomialResidualsContinuous(
   max = +5,
   cutoff = 5,
   title = NULL,
-  print = T
+  print = T,
+  textsize = 18,
+  xLabel = NULL
 )
 }
 \arguments{
@@ -37,6 +39,10 @@ binomialResidualsContinuous(
 \item{title}{an optional character to be the title of the graph}
 
 \item{print}{a logical (true prints the dataset before plotting it)}
+
+\item{textsize}{the font size of the graph}
+
+\item{xLabel}{a character string for the label of the x axis}
 }
 \value{
 a ggplot2 graph
