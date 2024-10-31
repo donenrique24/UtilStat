@@ -3,6 +3,7 @@
 export(binomialResidualsClass)
 export(binomialResidualsContinuous)
 export(getGaussHermiteQuadApproximation)
+export(getPredictedProbsAndObservedProps)
 export(hosmerLemeshowTest)
 export(summarizeThisVariable)
 export(symSquare)

@@ -20,6 +20,19 @@ test_that("Testing results of variable description", {
   expect_equal(b$formatted.G_TOT, "16.9 (0.0,64.1)")
 })
 
+context("Testing predicted probabilities against observed proportions")
+
+example <- UtilStat::exampleRecruitment
+
+predProb <- UtilStat::getPredictedProbsAndObservedProps(example, example$pred, "G_TOT", 2, "occurred")
+
+test_that("Testing results of Hosmer-Lemeshow test", {
+  expect_equal(predProb[10,"roundVar"], 18, tolerance = 1E-5)
+  expect_equal(predProb[10,"n"], 1800, tolerance = 1E-5)
+  expect_equal(predProb[10,"pred"], 0.0355889, tolerance = 1E-5)
+  expect_equal(predProb[10,"obs"], 0.03166667, tolerance = 1E-5)
+})
+
 context("Testing Hosmer-Lemeshow Implementation")
 
 example <- UtilStat::exampleRecruitment
