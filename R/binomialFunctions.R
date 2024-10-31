@@ -13,13 +13,45 @@
 "exampleRecruitment"
 
 
-.binomialResidualsCore <- function(dataSet, fieldName, min, max, cutoff, continuous, title, print=T) {
+.getPredProbAndObsProp <- function(dataSet, cutoff) {
   meanPred <- stats::aggregate(pred ~ roundVar, dataSet, FUN="mean")
   meanObs <- stats::aggregate(obs ~ roundVar, dataSet, FUN="mean")
   n <- stats::aggregate(obs ~ roundVar, dataSet, FUN="length")
   colnames(n)[2] <- "n"
   tmp <- merge(n,merge(meanPred, meanObs, by="roundVar"), by="roundVar")
   tmp <- tmp[which(tmp$n >= cutoff),]
+  return(tmp)
+}
+
+
+
+
+#'
+#' Provides a table of predicted probabilities and observed proportions
+#'
+#' @param dataSet a data.frame object that was used to fit the model
+#' @param fitted a vector of predictions on the original scale
+#' @param fieldName a character standing for the field name of the continuous explanatory variable in the dataSet object
+#' @param classRange a numeric standing for the width of the classes
+#' @param obsFieldName a character standing for the field name of the response variable
+#' @param cutoff the minimum number of observations to consider the residual
+#' @return a data.frame object
+#'
+#' @export
+getPredictedProbsAndObservedProps <- function(dataSet, fitted, fieldName, classRange, obsFieldName, cutoff = 5) {
+  .dataSet <- as.data.frame(dataSet)
+  .dataSet$pred <- fitted
+  .dataSet$obs <- .dataSet[,obsFieldName]
+  .dataSet$roundVar <- round(.dataSet[,fieldName] / classRange) * classRange
+  .dataSetTrim <- as.data.frame(.dataSet[,c("pred", "obs", "roundVar")])
+  tmp <- .getPredProbAndObsProp(.dataSetTrim, cutoff)
+  return(tmp)
+}
+
+
+
+.binomialResidualsCore <- function(dataSet, fieldName, min, max, cutoff, continuous, title, print=T) {
+  tmp <- .getPredProbAndObsProp(dataSet, cutoff)
   tmp$var <- tmp$pred * (1 - tmp$pred) / tmp$n
   tmp$std <- tmp$var^.5
   tmp$lower95 <- stats::qt(0.025, df=tmp$n - 1)
