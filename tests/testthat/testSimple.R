@@ -9,6 +9,18 @@ context("Testing variable description")
 
 example <- UtilStat::exampleRecruitment
 
+exampleTmp <- renameField(example, "G_TOT", "TotalBasalArea")
+test_that("Testing renaming was effective", {
+  expect_equal("TotalBasalArea" %in% colnames(exampleTmp), TRUE)
+})
+
+nbCols <- length(colnames(exampleTmp))
+exampleTmp <- dropFields(exampleTmp, c("i", "kk"))
+test_that("Testing dropping columns was effective", {
+  expect_equal(length(colnames(exampleTmp)), nbCols-2)
+})
+
+
 a <- summarizeThisVariable(example, "G_TOT", "speciesGr")
 b <- summarizeThisVariable(example, "G_TOT", "speciesGr", format = T, nbDigits = 1)
 

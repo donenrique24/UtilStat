@@ -35,3 +35,71 @@ summarizeThisVariable <- function(dataset, variable, speciesField, onlyWherePres
   }
   return(output)
 }
+
+
+#'
+#' Rename a particular field of a data.frame object
+#'
+#' @param df a data.frame object
+#' @param oldName the current field name
+#' @param newName the new field name
+#' @return the updated data.frame object
+#'
+#' @export
+renameField <- function(df, oldName, newName) {
+  if (!oldName %in% colnames(df)) {
+    stop("The field ", oldname, " can't be found in the data.frame object!")
+  }
+  index <- which(colnames(df) == oldName)
+  colnames(df)[index] <- newName
+  return(df)
+}
+
+
+
+#'
+#' Drop fields from a data.frame object
+#'
+#' @param df a data.frame object
+#' @param fieldsToBeDropped a vector of field names to be dropped
+#' @return the updated data.frame object
+#'
+#' @export
+dropFields <- function(df, fieldsToBeDropped) {
+  fieldsToKeep <- colnames(df)[which(!colnames(df) %in% fieldsToBeDropped)]
+  return (df[,fieldsToKeep])
+}
+
+
+#'
+#' Fill missing values in a dataset.
+#'
+#' @param df a data.frame object
+#' @param missingNumeric a double that stands for missing value
+#' @param missingInteger an integer that stands for missing value
+#' @param missingCharacter a character string that stands for missing value
+#'
+#' @return an updated data.frame instance
+#'
+#' @export
+fillMissingValues <- function(df, missingNumeric = -99999999, missingInteger = as.integer(missingNumeric), missingCharacter = "NA") {
+  for (field in colnames(df)) {
+    fieldValues <- df[,field]
+    indexNA <- which(is.na(fieldValues))
+    if (length(indexNA) > 0) {
+      if ("integer" %in% class(fieldValues)) {
+        df[indexNA, field] <- missingInteger
+      } else if ("numeric" %in% class(fieldValues)) {
+        df[indexNA, field] <- missingNumeric
+      } else if ("character" %in% class(fieldValues)) {
+        df[indexNA, field] <- missingCharacter
+      } else {
+        stop("This class cannot be processed for NA: ", class(fieldValues))
+      }
+      message("There are ", length(indexNA), " NA values in field ", field, ". There were replaced by NA or -99999999!")
+    }
+  }
+  return(df)
+}
+
+

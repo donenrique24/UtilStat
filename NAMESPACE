@@ -2,8 +2,11 @@
 
 export(binomialResidualsClass)
 export(binomialResidualsContinuous)
+export(dropFields)
+export(fillMissingValues)
 export(getGaussHermiteQuadApproximation)
 export(getPredictedProbsAndObservedProps)
 export(hosmerLemeshowTest)
+export(renameField)
 export(summarizeThisVariable)
 export(symSquare)
