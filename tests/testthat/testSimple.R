@@ -1,5 +1,5 @@
 ########################################################
-# Home made tests for J4R
+# Tests for UtilStat
 # Author: Mathieu Fortin, Canadian Wood Fibre Centre
 # Date: January 2019
 ########################################################
