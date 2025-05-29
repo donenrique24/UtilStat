@@ -1,7 +1,7 @@
 Package: UtilStat
 Type: Package
 Title: Tools for statistical analysis
-Version: 1.2.3
+Version: 1.2.4
 Authors@R: c(
     person("Mathieu", "Fortin", email = "mathieu.fortin.re@gmail.com", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-6436-2727")),
 	  person("His Majesty the King in right of Canada and Quebec Minister of Natural Resources and Forests", role=c("cph")))

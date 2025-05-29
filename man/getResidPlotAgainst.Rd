@@ -2,13 +2,14 @@
 % Please edit documentation in R/linearModelAssessmentFunctions.R
 \name{getResidPlotAgainst}
 \alias{getResidPlotAgainst}
-\title{Plot average predicted values against classes of a particular covariate}
+\title{Plot average predicted values against classes of a particular
+continuous covariate.}
 \usage{
 getResidPlotAgainst(
   model,
   data,
-  classWidth,
-  fieldname = "pred",
+  fieldname,
+  classWidth = NULL,
   printout = F,
   cutoff = NULL,
   normalize = T
@@ -19,11 +20,11 @@ getResidPlotAgainst(
 
 \item{data}{the data.frame object used to fit the model}
 
-\item{classWidth}{a positive numeric defining the width of the classes of
-the variable on the x axis}
-
 \item{fieldname}{the name of the variables the average residuals are plotted
 against. By default, it is set to "pred" that is the model predictions}
+
+\item{classWidth}{a positive numeric defining the width of the classes of
+the variable on the x axis}
 
 \item{printout}{a logical (true to print out the average residuals)}
 
@@ -34,5 +35,6 @@ to be included in the plot}
 use raw residuals}
 }
 \description{
-Plot average predicted values against classes of a particular covariate
+Plot average predicted values against classes of a particular
+continuous covariate.
 }

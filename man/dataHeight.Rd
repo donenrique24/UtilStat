@@ -5,7 +5,7 @@
 \alias{dataHeight}
 \title{Linear model assessment tools}
 \format{
-An object of class \code{data.frame} with 529 rows and 5 columns.
+An object of class \code{data.frame} with 1060 rows and 6 columns.
 }
 \usage{
 dataHeight
