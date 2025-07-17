@@ -41,8 +41,9 @@ getResidPlotAgainst <- function(model,
                                 printout = F,
                                 cutoff=NULL,
                                 normalize=T) {
-  if (is.null(model) | (!methods::is(model, "gls") & !methods::is(model, "lm"))) {
-    stop("The model argument must be a gls or lm instance!")
+  if (is.null(model) |
+      (!methods::is(model, "gls") & !methods::is(model, "lm") & !methods::is(model, "lme"))) {
+    stop("The model argument must be a gls, lme, or lm instance!")
   }
   if (is.null(data) | !methods::is(data, "data.frame")) {
     stop("The data argument must be the same data.frame object used to fit the model object!")
