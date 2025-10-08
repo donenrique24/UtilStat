@@ -29,8 +29,8 @@ summarizeThisVariable <- function(dataset, variable, speciesField, onlyWherePres
   output <- merge(output, min, by=speciesField)
   output <- merge(output, max, by=speciesField)
   if (format) {
-    output[,3:5] <- format(round(output[,3:5], digits = nbDigits), nsmall = nbDigits)
-    output[,paste("formatted", variable, sep=".")] <- paste0(output[,3], " (", output[,4], ",", output[,5], ")")
+    output[,3:5] <- format(round(output[,3:5], digits = nbDigits), trim = T, nsmall = nbDigits)
+    output[,paste("formatted", variable, sep=".")] <- paste0(output[,3], " [", output[,4], ",", output[,5], "]")
     output <- output[,c(1,2,6)]
   }
   return(output)
