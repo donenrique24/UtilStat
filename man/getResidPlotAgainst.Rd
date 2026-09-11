@@ -16,7 +16,7 @@ getResidPlotAgainst(
 )
 }
 \arguments{
-\item{model}{a model object (e.g. an lme, gls, or lm instance)}
+\item{model}{a model object (e.g. an lme, gls, or lm instance) or a vector of residuals}
 
 \item{data}{the data.frame object used to fit the model}
 

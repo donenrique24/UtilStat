@@ -21,7 +21,7 @@
 #' Plot average predicted values against classes of a particular
 #' continuous covariate.
 #'
-#' @param model a model object (e.g. an lme, gls, or lm instance)
+#' @param model a model object (e.g. an lme, gls, or lm instance) or a vector of residuals
 #' @param data the data.frame object used to fit the model
 #' @param fieldname the name of the variables the average residuals are plotted
 #' against. By default, it is set to "pred" that is the model predictions
@@ -42,8 +42,8 @@ getResidPlotAgainst <- function(model,
                                 cutoff=NULL,
                                 normalize=T) {
   if (is.null(model) |
-      (!methods::is(model, "gls") & !methods::is(model, "lm") & !methods::is(model, "lme"))) {
-    stop("The model argument must be a gls, lme, or lm instance!")
+      (!methods::is(model, "gls") & !methods::is(model, "lm") & !methods::is(model, "lme") & !methods::is(model, "numeric"))) {
+    stop("The model argument must be a gls, lme, or lm instance! Alternatively it can be a vector of residuals.")
   }
   if (is.null(data) | !methods::is(data, "data.frame")) {
     stop("The data argument must be the same data.frame object used to fit the model object!")
@@ -65,6 +65,9 @@ getResidPlotAgainst <- function(model,
   }
 
   if (fieldname == "pred") {
+    if (methods::is(model, "numeric")) {
+      stop("If the fieldname argument is set to pred, then the model argument must be an instance of the lm, gls, or lme class!")
+    }
     var <- stats::fitted(model)
     if (length(var) != nrow(data)) {
       stop("The number of rows of the data argument does not match the length of the prediction vector!")
@@ -83,14 +86,21 @@ getResidPlotAgainst <- function(model,
     data$clVar <- var
   }
 
-  if (normalize) {
-    if (methods::is(model, "lme") | methods::is(model, "gls")) {
-      data$res <- stats::residuals(model, level=0, type = "normalized")
-    } else {
-      data$res <- stats::rstandard(model)
+  if (methods::is(model, "numeric")) {
+    if (length(model) != nrow(data)) {
+      stop("Model was specified as a vector of numeric. However its length is incompatible with the number of rows in the data argument!")
     }
+    data$res <- model
   } else {
-    data$res <- stats::residuals(model)
+    if (normalize) {
+      if (methods::is(model, "lme") | methods::is(model, "gls")) {
+        data$res <- stats::residuals(model, level=0, type = "normalized")
+      } else {
+        data$res <- stats::rstandard(model)
+      }
+    } else {
+      data$res <- stats::residuals(model)
+    }
   }
   tmp <- stats::aggregate(res ~ clVar, data, FUN="mean")
   n <- stats::aggregate(res ~ clVar, data, FUN="length")
@@ -103,16 +113,25 @@ getResidPlotAgainst <- function(model,
   if (!is.null(cutoff)) {
     if (!methods::is(cutoff, "numeric")) {
       warning("The cutoff argument should be a numeric! It will be ignored.")
-      plot <- plot + ggplot2::geom_point(ggplot2::aes(x=clVar, y=res), tmp, size=2)
+      selectedData <- tmp
+      plot <- plot + ggplot2::geom_point(ggplot2::aes(x=clVar, y=res), selectedData, size=2)
     } else {
-      plot <- plot + ggplot2::geom_point(ggplot2::aes(x=clVar, y=res), tmp[which(tmp$n > cutoff),], size=2)
+      selectedData <- tmp[which(tmp$n > cutoff),]
+      plot <- plot + ggplot2::geom_point(ggplot2::aes(x=clVar, y=res), selectedData, size=2)
     }
   } else {
-    plot <- plot + ggplot2::geom_point(ggplot2::aes(x=clVar, y=res), tmp, size=2)
+    selectedData <- tmp
+    plot <- plot + ggplot2::geom_point(ggplot2::aes(x=clVar, y=res), selectedData, size=2)
+  }
+  bound <- max(abs(selectedData$res))
+  if (bound < 1) {
+    bound <- 1
+  } else {
+    bound <- ceiling(bound)
   }
   plot <- plot +
     ggplot2::geom_hline(yintercept = 0, linewidth = 1) +
-    ggplot2::ylim(-5,5) +
+    ggplot2::ylim(-bound,bound) +
     ggplot2::xlab(fieldname) +
     ggplot2::ggtitle(fieldname)
   return(plot)

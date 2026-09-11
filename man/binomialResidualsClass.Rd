@@ -9,11 +9,13 @@ binomialResidualsClass(
   fitted,
   fieldName,
   obsFieldName,
-  min = -5,
-  max = +5,
+  range = NULL,
   cutoff = 5,
   title = NULL,
-  print = T
+  print = T,
+  textsize = 18,
+  xLabel = NULL,
+  size = 2
 )
 }
 \arguments{
@@ -25,15 +27,19 @@ binomialResidualsClass(
 
 \item{obsFieldName}{a character standing for the field name of the response variable}
 
-\item{min}{the lower bound of the y-axis}
-
-\item{max}{the upper bound of the y-axis}
+\item{range}{the range of the y-axis. If set to 6, then the y axis range is [-6,+6]}
 
 \item{cutoff}{the minimum number of observations to consider the residual}
 
 \item{title}{an optional character to be the title of the graph}
 
 \item{print}{a logical (true prints the dataset before plotting it)}
+
+\item{textsize}{the font size of the graph}
+
+\item{xLabel}{a character string for the label of the x axis}
+
+\item{size}{the size of symbol and thickness of axes}
 }
 \value{
 a ggplot2 graph

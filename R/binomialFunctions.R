@@ -14,6 +14,9 @@
 
 
 .getPredProbAndObsProp <- function(dataSet, cutoff) {
+  if (is.null(cutoff) || cutoff < 5) {
+    cutoff <- 5
+  }
   meanPred <- stats::aggregate(pred ~ roundVar, dataSet, FUN="mean")
   meanObs <- stats::aggregate(obs ~ roundVar, dataSet, FUN="mean")
   n <- stats::aggregate(obs ~ roundVar, dataSet, FUN="length")
@@ -50,17 +53,23 @@ getPredictedProbsAndObservedProps <- function(dataSet, fitted, fieldName, classR
 
 
 
-.binomialResidualsCore <- function(dataSet, fieldName, min, max, cutoff, continuous, title, print=T, textsize = 18, xLabel = NULL) {
+.binomialResidualsCore <- function(dataSet, fieldName, cutoff, continuous, title, range=NULL, print=T, textsize = 18, xLabel = NULL, size=2) {
   tmp <- .getPredProbAndObsProp(dataSet, cutoff)
   tmp$var <- tmp$pred * (1 - tmp$pred) / tmp$n
   tmp$std <- tmp$var^.5
   tmp$lower95 <- stats::qt(0.025, df=tmp$n - 1)
   tmp$upper95 <- stats::qt(0.975, df=tmp$n - 1)
   tmp$diff <- (tmp$obs - tmp$pred) / tmp$std
+  if (is.null(range)) {
+    range <- ceiling(max(abs(tmp$diff)))
+  }
+  if (range < 5) {
+      range <- 5
+  }
   if (print) {
     print(tmp)
   }
-  plot <- ggplot2::ggplot() + ggplot2::geom_point(ggplot2::aes(x=roundVar, y = diff), tmp, size = 2)
+  plot <- ggplot2::ggplot() + ggplot2::geom_point(ggplot2::aes(x=roundVar, y = diff), tmp, size = size)
   if (continuous) {
     plot <- plot +
       ggplot2::geom_line(ggplot2::aes(x=roundVar, y=upper95), tmp, color = "red", lty=2) +
@@ -73,12 +82,12 @@ getPredictedProbsAndObservedProps <- function(dataSet, fitted, fieldName, classR
   if (!is.null(title)) {
     titleStr <- paste(title, "; Variable =", fieldName)
     plot <- plot + ggplot2::ggtitle(titleStr)
-  } else if (print) {
+  } else {
     titleStr <- paste("Variable =", fieldName)
     plot <- plot + ggplot2::ggtitle(titleStr)
   }
   plot <- plot + ggplot2::geom_hline(yintercept = 0) +
-    ggplot2::ylim(min,max) +
+    ggplot2::ylim(-range,range) +
     ggplot2::ylab("Average Pearson residuals")
 
   if (!is.null(xLabel)) {
@@ -93,7 +102,7 @@ getPredictedProbsAndObservedProps <- function(dataSet, fitted, fieldName, classR
           panel.grid.major = ggplot2::element_blank(),
           panel.grid.minor = ggplot2::element_blank(),
           panel.background = ggplot2::element_blank(),
-          axis.ticks.length = ggplot2::unit(3,"mm"),
+          axis.ticks.length = ggplot2::unit(size,"mm"),
           panel.border = ggplot2::element_blank())
 
   return(plot)
@@ -110,23 +119,32 @@ getPredictedProbsAndObservedProps <- function(dataSet, fitted, fieldName, classR
 #' @param fieldName a character standing for the field name of the continuous explanatory variable in the dataSet object
 #' @param classRange a numeric standing for the width of the classes
 #' @param obsFieldName a character standing for the field name of the response variable
-#' @param min the lower bound of the y-axis
-#' @param max the upper bound of the y-axis
+#' @param range the range of the y-axis. If set to 6, then the y axis range is [-6,+6]
 #' @param cutoff the minimum number of observations to consider the residual
 #' @param title an optional character to be the title of the graph
 #' @param print a logical (true prints the dataset before plotting it)
 #' @param textsize the font size of the graph
 #' @param xLabel a character string for the label of the x axis
+#' @param size the size of symbol and thickness of axes
 #' @return a ggplot2 graph
 #'
 #' @export
-binomialResidualsContinuous <- function(dataSet, fitted, fieldName, classRange, obsFieldName, min = -5, max = +5, cutoff = 5, title = NULL, print = T, textsize = 18, xLabel = NULL) {
+binomialResidualsContinuous <- function(dataSet, fitted, fieldName, classRange, obsFieldName, range = NULL, cutoff = 5, title = NULL, print = T, textsize = 18, xLabel = NULL, size=2) {
   .dataSet <- as.data.frame(dataSet)
   .dataSet$pred <- fitted
   .dataSet$obs <- .dataSet[,obsFieldName]
   .dataSet$roundVar <- round(.dataSet[,fieldName] / classRange) * classRange
   .dataSetTrim <- as.data.frame(.dataSet[,c("pred", "obs", "roundVar")])
-  plot <- .binomialResidualsCore(.dataSetTrim, fieldName, min, max, cutoff, continuous = T, title, print, textsize, xLabel)
+  plot <- .binomialResidualsCore(dataSet = .dataSetTrim,
+                                 fieldName = fieldName,
+                                 cutoff = cutoff,
+                                 continuous = T,
+                                 title = title,
+                                 range = range,
+                                 print = print,
+                                 textsize = textsize,
+                                 xLabel = xLabel,
+                                 size = size)
   return(plot)
 }
 
@@ -140,22 +158,33 @@ binomialResidualsContinuous <- function(dataSet, fitted, fieldName, classRange, 
 #' @param fitted a vector of predictions on the original scale
 #' @param fieldName a character standing for the field name of the categorical explanatory variable in the dataSet object
 #' @param obsFieldName a character standing for the field name of the response variable
-#' @param min the lower bound of the y-axis
-#' @param max the upper bound of the y-axis
+#' @param range the range of the y-axis. If set to 6, then the y axis range is [-6,+6]
 #' @param cutoff the minimum number of observations to consider the residual
 #' @param title an optional character to be the title of the graph
 #' @param print a logical (true prints the dataset before plotting it)
+#' @param textsize the font size of the graph
+#' @param xLabel a character string for the label of the x axis
+#' @param size the size of symbol and thickness of axes
 #' @return a ggplot2 graph
 #'
 #' @export
-binomialResidualsClass <- function(dataSet, fitted, fieldName, obsFieldName, min = -5, max = +5, cutoff = 5, title = NULL, print = T) {
+binomialResidualsClass <- function(dataSet, fitted, fieldName, obsFieldName, range = NULL, cutoff = 5, title = NULL, print = T, textsize = 18, xLabel = NULL, size=2) {
   .dataSet <- as.data.frame(dataSet)
   .dataSet$pred <- as.numeric(fitted)
   .dataSet$obs <- .dataSet[,obsFieldName]
-  .dataSet$roundVar <- .dataSet[,fieldName]
+  .dataSet$roundVar <- as.factor(.dataSet[,fieldName])
   .dataSetTrim <- as.data.frame(.dataSet[,c("pred", "obs", "roundVar")])
 #  d <- .dataSetTrim
-  plot <- .binomialResidualsCore(.dataSetTrim, fieldName, min, max, cutoff, continuous = F, title, print)
+  plot <- .binomialResidualsCore(dataSet = .dataSetTrim,
+                                 fieldName = fieldName,
+                                 cutoff = cutoff,
+                                 continuous = F,
+                                 title = title,
+                                 range = range,
+                                 print = print,
+                                 textsize = textsize,
+                                 xLabel = xLabel,
+                                 size = size)
   return(plot)
 }
 

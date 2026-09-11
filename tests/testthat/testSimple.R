@@ -36,7 +36,7 @@ context("Testing predicted probabilities against observed proportions")
 
 example <- UtilStat::exampleRecruitment
 
-UtilStat::binomialResidualsContinuous(example, example$pred, "G_TOT", 2, "occurred", print=F, textsize = 20, xLabel = "Basal area")
+UtilStat::binomialResidualsContinuous(example, example$pred, "G_TOT", 2, "occurred", range = 8, print=F, textsize = 20, xLabel = "Basal area", size = 1)
 
 predProb <- UtilStat::getPredictedProbsAndObservedProps(example, example$pred, "G_TOT", 2, "occurred")
 

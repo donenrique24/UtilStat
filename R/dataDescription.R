@@ -103,3 +103,41 @@ fillMissingValues <- function(df, missingNumeric = -99999999, missingInteger = a
 }
 
 
+#'
+#' Tabulate the data into a close-to-LateX format
+#'
+#' @param dataFrame the data.frame object to be tabulated
+#' @param nbDigits the number of numeric fields
+#' @param prefix a prefix to field values
+#' @param suffix a suffix to field values
+#'
+#' @export
+tabulateDataFrame <- function(dataFrame, nbDigits = NULL, prefix = NULL, suffix=NULL) {
+  .tmp <- dataFrame
+  for (field in colnames(.tmp)) {
+    if ("numeric" %in% class(.tmp[,field])) {
+      if (!is.null(nbDigits)) {
+        .tmp[,field] <- format(round(.tmp[,field], digits = nbDigits), nsmall = nbDigits)
+      }
+      if (!is.null(suffix)) {
+        .tmp[,field] <- paste(as.character(.tmp[,field]),suffix,sep="")
+      }
+    }
+    if ("factor" %in% class(.tmp[,field])) {
+      .tmp[,field] <- as.character(.tmp[,field])
+    }
+  }
+  output <- NULL
+  for (i in 1:length(.tmp[,1])) {
+    if (!is.null(prefix)) {
+      entry <- paste(prefix, paste(paste(.tmp[i,], collapse = " & "), "\\"), sep="")
+    } else {
+      entry <- paste(paste(.tmp[i,], collapse = " & "), "\\")
+    }
+    output <- rbind(output, data.frame(entry))
+  }
+  output[,1] <- format(output[,1], justfy = "left")
+  print(output, row.names = F)
+}
+
+
