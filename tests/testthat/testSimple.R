@@ -20,6 +20,7 @@ test_that("Testing dropping columns was effective", {
   expect_equal(length(colnames(exampleTmp)), nbCols-2)
 })
 
+# UtilStat::tabulateDataFrame(example[1:10,], nbDigits = 2)
 
 a <- summarizeThisVariable(example, "G_TOT", "speciesGr")
 b <- summarizeThisVariable(example, "G_TOT", "speciesGr", format = T, nbDigits = 1)

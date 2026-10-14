@@ -130,14 +130,14 @@ tabulateDataFrame <- function(dataFrame, nbDigits = NULL, prefix = NULL, suffix=
   output <- NULL
   for (i in 1:length(.tmp[,1])) {
     if (!is.null(prefix)) {
-      entry <- paste(prefix, paste(paste(.tmp[i,], collapse = " & "), "\\"), sep="")
+      entry <- paste(prefix, paste(paste(.tmp[i,], collapse = " & "), "\\\\"), sep="")
     } else {
-      entry <- paste(paste(.tmp[i,], collapse = " & "), "\\")
+      entry <- paste(paste(.tmp[i,], collapse = " & "), "\\\\")
     }
     output <- rbind(output, data.frame(entry))
   }
   output[,1] <- format(output[,1], justfy = "left")
-  print(output, row.names = F)
+  cat(output$entry, sep="\n")
 }
 
 
